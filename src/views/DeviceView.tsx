@@ -1,44 +1,36 @@
-import React from 'react';
-import { Button, Switch } from '@material-ui/core';
-import { observer } from 'mobx-react'
+import { Box, Switch } from '@material-ui/core';
+import React from "react";
+import { Device, useDevices } from "../model/useDevices";
+import { pick } from "../utils";
+import { Text } from './pieces';
 
-import RuedigerContext from '../RuedigerContext'
-import { Text } from './polyfills'
+function OnOffView({ device }: { device: Device }) {
+    const { execute } = useDevices(x => pick(x, 'execute'));
 
+    const trait = device.traits.find(x => x.name === 'OnOff');
+    if (!trait) return null
 
-const TypeIcon = ({ type }) => {
-    let typename = type.split(".").pop()
-    let iconname = {
-        "LIGHT": "lightbulb-on-outline",
-        "OUTLET": "power",
-        "HEATER": "desktop-tower-monitor",
-        "SWITCH": "light-switch"
-    }[typename];
+    const is_on = trait.state === 'on';
+    const toggle = () => execute(device.id, trait.name, is_on ? "off" : "on");
 
-    // if (iconname) {
-    //     return <Icon name={iconname} size={32} style={style.deviceIcon} />
-    // } else {
-    return <Text>{typename}</Text>
-    // }
+    return <div className="onOffView">
+        <style>{`
+            .onOffView {
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+            }
+        `}</style>
+
+        <Text>{is_on ? "An" : "Aus"}</Text>
+        <Switch
+            checked={is_on}
+            onChange={toggle}
+        />
+    </div>
 }
 
-const OnOffView = observer(({ device }) => {
-    const onToggle = React.useCallback((e) => {
-        device.traits.onOff.switch(e.target.checked)
-    }, [device]);
-
-    if (device.traits.onOff) {
-        return <div className="onOffView">
-            <Text>{device.traits.onOff.current ? "An" : "Aus"}</Text>
-            <Switch
-                checked={device.traits.onOff.current}
-                onChange={onToggle}
-            />
-        </div>
-    }
-    return null
-})
-
+/*
 const ModeView = observer(({ device, index }) => {
     const mode = device.traits.modes.modes[index]
     const [opened, setOpened] = React.useState(false)
@@ -78,20 +70,16 @@ const ModesView = observer(({ device }) => {
     }
     return null
 })
+*/
 
-const DeviceView = observer(({ device }) => {
-    const { execute } = React.useContext(RuedigerContext)
+export function DeviceView({ device }: { device: Device }) {
+    return <Box className="deviceFrame">
+        <div className="device">
+            {/* <TypeIcon type={device.type} /> */}
+            <h3>{device.name}</h3>
 
-    return (
-        <div className="deviceFrame">
-            <div className="device">
-                {/* <TypeIcon type={device.type} /> */}
-                <h3>{device.name}</h3>
-
-                <OnOffView device={device} />
-                <ModesView device={device} />
-            </div>
-        </div>)
-})
-
-export default DeviceView
+            <OnOffView device={device} />
+            {/* <ModesView device={device} /> */}
+        </div>
+    </Box>
+}
