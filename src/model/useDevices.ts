@@ -76,8 +76,8 @@ const test_devices = [
 
 export const useDevices = createStore(() => {
     const {error, data: devices, mutate} = useSWR<Device[]>("/devices/list",
-        () => test_devices);
-        //fetch_json);
+        // () => test_devices);
+        fetch_json);
 
     const execute = useCallback(async (device_id: number, trait: string, command: string) => {
         const res = await post_json("/devices/execute", {

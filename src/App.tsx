@@ -3,11 +3,11 @@ import { ReusableProvider } from 'reusable';
 import './App.scss';
 import { DevicesScreen } from './views/DevicesScreen';
 
-import './model/useDevices'
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import { Devices, GroupSharp, Help } from '@material-ui/icons';
+import { Route } from 'react-router-dom';
+import './model/useDevices';
 import { GroupsScreen } from './views/GroupsScreen';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 function AboutScreen() {
     return <h1>About or something</h1>
