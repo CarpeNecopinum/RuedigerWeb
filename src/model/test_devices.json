@@ -1,0 +1,170 @@
+[
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_off\":\"14107552\",\"code_on\":\"14088368\"}",
+        "id": 1,
+        "traits": [
+            {
+                "name": "OnOff",
+                "state": "off",
+                "device_id": 1
+            }
+        ],
+        "name": "Stecker 1A",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"14088372\",\"code_off\":\"14107556\"}",
+        "id": 2,
+        "traits": [
+            {
+                "state": "off",
+                "device_id": 2,
+                "name": "OnOff"
+            }
+        ],
+        "name": "Stecker 1B",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"14088380\",\"code_off\":\"14107564\"}",
+        "id": 3,
+        "traits": [
+            {
+                "device_id": 3,
+                "state": "off",
+                "name": "OnOff"
+            }
+        ],
+        "name": "Stecker 1C",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"14107554\",\"code_off\":\"14088370\"}",
+        "id": 4,
+        "traits": [
+            {
+                "device_id": 4,
+                "state": "off",
+                "name": "OnOff"
+            }
+        ],
+        "name": "Stecker 1D",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"12882032\",\"code_off\":\"12776720\"}",
+        "id": 5,
+        "traits": [
+            {
+                "state": "off",
+                "device_id": 5,
+                "name": "OnOff"
+            }
+        ],
+        "name": "Stecker 2A",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"12882036\",\"code_off\":\"13560228\"}",
+        "id": 6,
+        "traits": [
+            {
+                "device_id": 6,
+                "name": "OnOff",
+                "state": "off"
+            }
+        ],
+        "name": "Stecker 2B",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"12882044\",\"code_off\":\"13560236\"}",
+        "id": 7,
+        "traits": [
+            {
+                "state": "off",
+                "device_id": 7,
+                "name": "OnOff"
+            }
+        ],
+        "name": "Stecker 2C",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"13560226\",\"code_off\":\"12882034\"}",
+        "id": 8,
+        "traits": [
+            {
+                "device_id": 8,
+                "name": "OnOff",
+                "state": "off"
+            }
+        ],
+        "name": "Stecker 2D",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"772976\",\"code_off\":\"438928\"}",
+        "id": 9,
+        "traits": [
+            {
+                "device_id": 9,
+                "state": "off",
+                "name": "OnOff"
+            }
+        ],
+        "name": "Stecker 3A",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"906036\",\"code_off\":\"438932\"}",
+        "id": 10,
+        "traits": [
+            {
+                "name": "OnOff",
+                "state": "off",
+                "device_id": 10
+            }
+        ],
+        "name": "Stecker 3B",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"906044\",\"code_off\":\"438940\"}",
+        "id": 11,
+        "traits": [
+            {
+                "state": "off",
+                "device_id": 11,
+                "name": "OnOff"
+            }
+        ],
+        "name": "Stecker 3C",
+        "actor": "Sender433"
+    },
+    {
+        "kind": "outlet",
+        "actor_data": "{\"code_on\":\"438930\",\"code_off\":\"772978\"}",
+        "id": 12,
+        "traits": [
+            {
+                "state": "off",
+                "device_id": 12,
+                "name": "OnOff"
+            }
+        ],
+        "name": "Stecker 3D",
+        "actor": "Sender433"
+    }
+]
