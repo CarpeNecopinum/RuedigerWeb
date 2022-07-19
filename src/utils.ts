@@ -1,10 +1,8 @@
-const API_HOST = "http://localhost:3000"
-
 export async function post_json(url: RequestInfo | URL, data: any) {
     if (typeof data != "string")
         data = JSON.stringify(data)
 
-    return await fetch(API_HOST + url, {
+    return await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -14,7 +12,7 @@ export async function post_json(url: RequestInfo | URL, data: any) {
 }
 
 export async function fetch_json(url: RequestInfo | URL) {
-    const res = await fetch(API_HOST + url)
+    const res = await fetch(url)
     console.debug(res)
     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`)
     return await res.json()

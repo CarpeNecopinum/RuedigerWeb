@@ -22,9 +22,14 @@ body {
     flex-direction: column;
 }
 
+.content {
+    overflow-y: auto;
+    max-height: 100%;
+}
+
 #devices {
     flex-grow: 1;
-    column-width: 250px;
+    column-width: 200px;
     column-gap: 0;
 
     .deviceFrame {

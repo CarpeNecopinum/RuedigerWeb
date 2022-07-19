@@ -17,8 +17,10 @@ export function DevicesScreen() {
                 <Typography variant="h6">Geräte</Typography>
             </Toolbar>
         </AppBar>
-        <div id="devices">
-            {devices.map(device => <DeviceView key={device.id} device={device} />)}
+        <div className="content">
+            <div id="devices">
+                {devices.map(device => <DeviceView key={device.id} device={device} />)}
+            </div>
         </div>
     </>
 }
