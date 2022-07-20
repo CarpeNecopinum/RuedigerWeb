@@ -151,14 +151,16 @@ export function GroupsScreen() {
                 <Typography variant="h6">Gruppen</Typography>
             </Toolbar>
         </AppBar>
-        <div id="groups">
-            {groups?.map(group => <GroupView key={group.id} devices={devices} group={group} />)}
+        <div className="content">
+            <div id="groups">
+                {groups?.map(group => <GroupView key={group.id} devices={devices} group={group} />)}
 
-            <Box sx={{ my: 2 }}>
-                <IconButton onClick={() => setCreating(true)}>
-                    <Add />
-                </IconButton>
-            </Box>
+                <Box sx={{ my: 2 }}>
+                    <IconButton onClick={() => setCreating(true)}>
+                        <Add />
+                    </IconButton>
+                </Box>
+            </div>
         </div>
 
         <Dialog open={creating} onClose={() => setCreating(false)} fullWidth={true}>
