@@ -1,10 +1,42 @@
-import { Circle, CircleOutlined, DeleteForever, Edit, ExpandLess, ExpandMore, Group as GroupIcon, Menu } from "@mui/icons-material";
+import { Add, Circle, CircleOutlined, DeleteForever, Edit, ExpandLess, ExpandMore, Group as GroupIcon, Menu } from "@mui/icons-material";
 import { AppBar, Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup, FormLabel, IconButton, Switch, TextField, Toolbar, Typography } from "@mui/material";
 import React, { FormEvent, useCallback, useMemo } from "react";
 import { Device, useDevices } from "../model/useDevices";
 import { Group, useGroups } from "../model/useGroups";
 import { pick } from "../utils";
 import { MultiDeviceView } from "./DeviceView";
+
+function GroupEditor({ devices, group }: { devices: Device[], group?: Group }) {
+    return <>
+        <style jsx global>{`
+            .checkboxes {
+                column-width: 140px;
+                column-gap: 0;
+                display: block;
+            }
+            .checkboxes label {
+                display: block;
+            }
+        `}</style>
+        <DialogTitle>{group ? "Gruppe bearbeiten" : "Gruppe erstellen"}</DialogTitle>
+        <DialogContent>
+            <TextField fullWidth variant="standard" label="Gruppenname" defaultValue={group?.name ?? "Neue Gruppe"} name="name" sx={{ my: 2 }} />
+            <Box sx={{ my: 2 }}>
+                <FormLabel component="legend">Gruppenmitglieder</FormLabel>
+                <FormGroup className="checkboxes">
+                    {devices.map(d => <FormControlLabel key={d.id} control={
+                        <Checkbox defaultChecked={group?.devices.includes(d.id)} name="devices" value={d.id} />
+                    } label={d.name} />)}
+                </FormGroup>
+            </Box>
+        </DialogContent>
+        <DialogActions>
+            <Button type="reset">Abbrechen</Button>
+            <Button type="submit" variant="outlined">Speichern</Button>
+        </DialogActions>
+    </>
+}
+
 
 function GroupView({ devices, group }: { devices: Device[], group: Group }) {
     const { save, drop } = useGroups(x => pick(x, 'save', 'drop'))
@@ -50,14 +82,6 @@ function GroupView({ devices, group }: { devices: Device[], group: Group }) {
                 justify-content: space-between;
                 align-items: center;
             }
-            .checkboxes {
-                column-width: 200px;
-                column-gap: 0;
-                display: block;
-            }
-            .checkboxes label {
-                display: block;
-            }
         `}</style>
 
         <div className="group-header" onClick={() => setOpen(x => !x)}>
@@ -87,23 +111,8 @@ function GroupView({ devices, group }: { devices: Device[], group: Group }) {
         </div>}
 
         <Dialog open={editing} onClose={() => setEditing(false)} fullWidth={true}>
-            <form onSubmit={editGroup}>
-                <DialogTitle>Gruppe bearbeiten</DialogTitle>
-                <DialogContent>
-                    <TextField fullWidth variant="standard" label="Gruppenname" defaultValue={group.name} name="name" sx={{ my: 2 }} />
-                    <Box sx={{ my: 2 }}>
-                        <FormLabel component="legend">Gruppenmitglieder</FormLabel>
-                        <FormGroup className="checkboxes">
-                            {devices.map(d => <FormControlLabel key={d.id} control={
-                                <Checkbox defaultChecked={group.devices.includes(d.id)} name="devices" value={d.id} />
-                            } label={d.name} />)}
-                        </FormGroup>
-                    </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setEditing(false)}>Abbrechen</Button>
-                    <Button type="submit" variant="outlined">Speichern</Button>
-                </DialogActions>
+            <form onSubmit={editGroup} onReset={() => setEditing(false)}>
+                <GroupEditor devices={devices} group={group} />
             </form>
         </Dialog>
 
@@ -121,8 +130,17 @@ function GroupView({ devices, group }: { devices: Device[], group: Group }) {
 }
 
 export function GroupsScreen() {
-    const { groups } = useGroups()
+    const { groups, save } = useGroups()
     const { devices } = useDevices()
+    const [creating, setCreating] = React.useState(false)
+
+    const create = useCallback(async (e: FormEvent) => {
+        e.preventDefault()
+        const data = new FormData(e.target as HTMLFormElement)
+        const name = data.get("name") as string
+        const devices = Array.from(data.getAll("devices")).map(x => +x)
+        if (await save({ name, devices })) setCreating(false)
+    }, [])
 
     return <>
         <AppBar position="static" color="primary">
@@ -135,6 +153,18 @@ export function GroupsScreen() {
         </AppBar>
         <div id="groups">
             {groups?.map(group => <GroupView key={group.id} devices={devices} group={group} />)}
+
+            <Box sx={{ my: 2 }}>
+                <IconButton onClick={() => setCreating(true)}>
+                    <Add />
+                </IconButton>
+            </Box>
         </div>
+
+        <Dialog open={creating} onClose={() => setCreating(false)} fullWidth={true}>
+            <form onSubmit={create} onReset={() => setCreating(false)}>
+                <GroupEditor devices={devices} />
+            </form>
+        </Dialog>
     </>
 }
