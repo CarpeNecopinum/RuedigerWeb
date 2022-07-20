@@ -1,8 +1,8 @@
-import { AppBar, Button, IconButton, Toolbar, Typography } from "@material-ui/core";
-import { Menu } from "@material-ui/icons";
+import { Menu } from "@mui/icons-material";
+import { AppBar, IconButton, Toolbar, Typography } from "@mui/material";
 import React from "react";
 import { useDevices } from "../model/useDevices";
-import { DeviceView } from "./DeviceView";
+import { MultiDeviceView } from "./DeviceView";
 
 
 export function DevicesScreen() {
@@ -18,9 +18,7 @@ export function DevicesScreen() {
             </Toolbar>
         </AppBar>
         <div className="content">
-            <div id="devices">
-                {devices.map(device => <DeviceView key={device.id} device={device} />)}
-            </div>
+            <MultiDeviceView devices={devices} />
         </div>
     </>
 }

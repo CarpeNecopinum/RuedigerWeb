@@ -1,4 +1,4 @@
-import { Box, Switch } from '@material-ui/core';
+import { Box, Divider, Switch, Typography } from '@mui/material';
 import React from "react";
 import { Device, useDevices } from "../model/useDevices";
 import { pick } from "../utils";
@@ -74,12 +74,39 @@ const ModesView = observer(({ device }) => {
 
 export function DeviceView({ device }: { device: Device }) {
     return <Box className="deviceFrame">
-        <div className="device">
+        <style jsx>{`                
+            .deviceFrame {
+                break-inside: avoid;
+                padding: 1em;
+            }
+            .device {
+                border: 1px solid silver;
+            }
+            h3 {
+                font-weight: normal;
+                color: var(--primary-color);
+            }
+        `}</style>
+        <Box className="device" sx={{ py: 2 }}>
             {/* <TypeIcon type={device.type} /> */}
-            <h3>{device.name}</h3>
+            <Typography variant="h6">{device.name}</Typography>
+
+            <Divider sx={{ my: 1 }} />
 
             <OnOffView device={device} />
             {/* <ModesView device={device} /> */}
-        </div>
+        </Box>
     </Box>
+}
+
+export function MultiDeviceView({ devices }: { devices: Device[] }) {
+    return <div className="devices">
+        <style jsx>{`
+            .devices {
+                column-width: 200px;
+                column-gap: 0;
+            }            
+        `}</style>
+        {devices.map(device => <DeviceView key={device.id} device={device} />)}
+    </div>
 }

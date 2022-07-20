@@ -31,20 +31,6 @@ body {
     flex-grow: 1;
     column-width: 200px;
     column-gap: 0;
-
-    .deviceFrame {
-        break-inside: avoid;
-        padding: 1em;
-
-        .device {
-            border: 1px solid silver;
-
-            h3 {
-                font-weight: normal;
-                color: var(--primary-color);
-            }
-        }
-    }
 }
 
 
@@ -78,32 +64,6 @@ body {
             &.active {
                 max-height: 1024px;
             }
-        }
-    }
-
-    .MuiButton-root {
-        color: white;
-        padding-left: 1.33em;
-        padding-right: 1.33em;
-
-        &.contained {
-            background-color: purple;
-        }
-
-        &.outlined {
-            border: 1px solid purple;
-        }
-    }
-
-    .MuiSwitch-root {
-        transform: scale(1.5);
-
-        .MuiSwitch-colorSecondary.Mui-checked {
-            color: MEDIUMVIOLETRED;
-        }
-
-        .MuiSwitch-track {
-            background-color: purple;
         }
     }
 }

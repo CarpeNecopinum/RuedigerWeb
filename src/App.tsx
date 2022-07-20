@@ -3,8 +3,8 @@ import { ReusableProvider } from 'reusable';
 import './App.scss';
 import { DevicesScreen } from './views/DevicesScreen';
 
-import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
-import { Devices, GroupSharp, Help } from '@material-ui/icons';
+import { BottomNavigation, BottomNavigationAction } from '@mui/material';
+import { Devices, GroupSharp, Help } from '@mui/icons-material';
 import { Route } from 'react-router-dom';
 import './model/useDevices';
 import { GroupsScreen } from './views/GroupsScreen';
@@ -44,7 +44,7 @@ function SlideyNavigation({ routes, current }: { routes: Route[], current: strin
 }
 
 function App() {
-    const [screen, setScreen] = React.useState('/devices');
+    const [screen, setScreen] = React.useState('/groups');
 
     return (
         <ReusableProvider>
