@@ -153,7 +153,7 @@ export function GroupsScreen() {
         </AppBar>
         <div className="content">
             <div id="groups">
-                {groups?.map(group => <GroupView key={group.id} devices={devices} group={group} />)}
+                {devices && groups?.map(group => <GroupView key={group.id} devices={devices} group={group} />)}
 
                 <Box sx={{ my: 2 }}>
                     <IconButton onClick={() => setCreating(true)}>

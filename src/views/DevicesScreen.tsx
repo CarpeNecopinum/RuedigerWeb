@@ -18,7 +18,7 @@ export function DevicesScreen() {
             </Toolbar>
         </AppBar>
         <div className="content">
-            <MultiDeviceView devices={devices} />
+            {devices && <MultiDeviceView devices={devices} />}
         </div>
     </>
 }
