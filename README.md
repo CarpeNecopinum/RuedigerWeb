@@ -1,3 +1,13 @@
+# Ruediger Web
+
+![](./public/logo192.png)
+
+A react app for the new Ruediger Home Automation System.
+
+
+
+# Developing / Installing
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
