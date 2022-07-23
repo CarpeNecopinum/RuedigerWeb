@@ -46,7 +46,9 @@ function GroupView({ devices, group }: { devices: Device[], group: Group }) {
     const [deleting, setDeleting] = React.useState(false)
 
     const devs = useMemo(
-        () => group.devices.map(id => devices.find(d => d.id === id)!),
+        () => group.devices
+            .map(id => devices.find(d => d.id === id)!)
+            .filter(d => d != null),
         [devices, group])
 
     const anyOn = devs.some(x => x.traits.some(t => t.name === "OnOff" && t.state === "on"))
