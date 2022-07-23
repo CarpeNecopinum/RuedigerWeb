@@ -1,3 +1,3 @@
 #!/bin/bash
 
-scp -r build pi@ruediger:~/ruedigerweb-built
+rsync -r build/ pi@ruediger:~/ruedigerweb-built
