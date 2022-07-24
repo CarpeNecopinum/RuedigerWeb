@@ -1,9 +1,10 @@
-import { Add, Circle, CircleOutlined, DeleteForever, Edit, ExpandLess, ExpandMore, Group as GroupIcon, Menu } from "@mui/icons-material";
-import { AppBar, Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup, FormLabel, IconButton, Switch, TextField, Toolbar, Typography } from "@mui/material";
+import { Add, DeleteForever, Edit, ExpandLess, ExpandMore, Group as GroupIcon } from "@mui/icons-material";
+import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, FormGroup, FormLabel, IconButton, Switch, TextField, Typography } from "@mui/material";
 import React, { FormEvent, useCallback, useMemo } from "react";
 import { Device, useDevices } from "../model/useDevices";
 import { Group, useGroups } from "../model/useGroups";
 import { pick } from "../utils";
+import { AppToolbar } from "./AppToolbar";
 import { MultiDeviceView } from "./DeviceView";
 
 function GroupEditor({ devices, group }: { devices: Device[], group?: Group }) {
@@ -109,7 +110,7 @@ function GroupView({ devices, group }: { devices: Device[], group: Group }) {
         </div>
 
         {open && <div className="group-body">
-            <MultiDeviceView devices={devs} />
+            <MultiDeviceView devices={devs} disableEditing />
         </div>}
 
         <Dialog open={editing} onClose={() => setEditing(false)} fullWidth={true}>
@@ -145,14 +146,7 @@ export function GroupsScreen() {
     }, [])
 
     return <>
-        <AppBar position="static" color="primary">
-            <Toolbar>
-                <IconButton edge="start" color="inherit" aria-label="menu">
-                    <Menu />
-                </IconButton>
-                <Typography variant="h6">Gruppen</Typography>
-            </Toolbar>
-        </AppBar>
+        <AppToolbar title="Gruppen" />
         <div className="content">
             <div id="groups">
                 {devices && groups?.map(group => <GroupView key={group.id} devices={devices} group={group} />)}

@@ -13,6 +13,20 @@ export type Device = {
     name: string;
     kind: string;
     traits: Trait[]
+    actor: string
+    actor_data: string
+}
+
+export const device_kinds = {
+    outlet: "Steckdose",
+    light: "Licht",
+    switch: "Schalter",
+    sensor: "Sensor",
+    thermostat: "Thermostat",
+    lock: "Türschloss",
+    alarm: "Alarm",
+    camera: "Kamera",
+    speaker: "Lautsprecher"
 }
 
 const test_devices = [
@@ -88,8 +102,18 @@ export const useDevices = createStore(() => {
         if (res.ok) mutate()
     }, [mutate])
 
+    const save = useCallback(async (device: Device | Omit<Device, 'id'>) => {
+        const res = await post_json("/devices/save", device)
+        if (res.ok) {
+            mutate()
+            return true
+        }
+        return false
+    }, [mutate])
+
     return {
         devices: devices ?? [],
-        execute
+        execute,
+        save
     }
 })

@@ -25,3 +25,7 @@ export function pick<T extends object, KS extends keyof T>(item: T, ...keys: KS[
     }
     return result
 }
+
+export const same = (a: Record<any,any>, b: Record<any,any>) => 
+    Object.keys(a).length == Object.keys(b).length &&
+    Object.keys(a).every(key => a[key] == b[key])
