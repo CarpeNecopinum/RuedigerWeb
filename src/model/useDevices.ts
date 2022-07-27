@@ -111,9 +111,19 @@ export const useDevices = createStore(() => {
         return false
     }, [mutate])
 
+    const drop = useCallback(async (device_id: number) => {
+        const res = await post_json("/devices/drop", {device_id})
+        if (res.ok) {
+            mutate()
+            return true
+        }
+        return false
+    }, [mutate])
+
     return {
         devices: devices ?? [],
         execute,
-        save
+        save,
+        drop
     }
 })
