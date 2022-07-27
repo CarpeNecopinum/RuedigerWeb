@@ -1,8 +1,9 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, Switch, TextField, Typography } from '@mui/material';
+import { Add, PieChart } from '@mui/icons-material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, IconButton, InputLabel, MenuItem, Select, Switch, TextField, Typography } from '@mui/material';
 import React, { FormEvent, useCallback } from "react";
 import { Device, device_kinds, useDevices } from "../model/useDevices";
 import { useModes } from '../model/useModes';
-import { pick } from "../utils";
+import { pick, same } from "../utils";
 import { ActorForms } from './ActorForms';
 import { Text } from './pieces';
 
@@ -32,10 +33,32 @@ function OnOffView({ device }: { device: Device }) {
     </div>
 }
 
+function OnView({ device }: { device: Device }) {
+    const { execute } = useDevices(x => pick(x, 'execute'));
+
+    const trait = device.traits.find(x => x.name === 'On');
+    if (!trait) return null
+
+    const on = () => execute(device.id, trait.name, "");
+
+    return <div className="onView">
+        <style>{`
+            .onView {
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+            }
+        `}
+        </style>
+        <Button variant="contained" onClick={on}>Einschalten</Button>
+    </div>
+}
+
 export function DeviceForm({ device, onClose }: { device?: Device, onClose: () => void }) {
     const [actor, setActor] = React.useState(device?.actor)
     const ActorForm = actor && ActorForms[actor as keyof typeof ActorForms]
-    const saveDevice = useDevices(x => x.save)
+    const { save: saveDevice, drop: dropDevice } = useDevices(x => pick(x, 'save', 'drop'), same)
+    const [deleting, setDeleting] = React.useState(false)
 
     const save = useCallback(async (e: FormEvent) => {
         e.preventDefault()
@@ -76,9 +99,23 @@ export function DeviceForm({ device, onClose }: { device?: Device, onClose: () =
             {ActorForm && <ActorForm device={device} />}
         </DialogContent>
         <DialogActions>
+            {device && <Button type="button" color="warning"
+                onClick={() => setDeleting(true)}>Löschen</Button>}
             <Button type="reset">Abbrechen</Button>
             <Button type="submit" variant="outlined">Speichern</Button>
         </DialogActions>
+
+
+        {device && <Dialog open={deleting} onClose={() => setDeleting(false)}>
+            <DialogTitle>Gruppe löschen</DialogTitle>
+            <DialogContent>
+                <Typography>Möchtest du das Gerät "{device.name}" wirklich löschen?</Typography>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setDeleting(false)}>Abbrechen</Button>
+                <Button color="warning" onClick={() => dropDevice(device.id)}>Löschen</Button>
+            </DialogActions>
+        </Dialog>}
     </form>
 }
 
@@ -99,21 +136,6 @@ export function DeviceView({ device, disableEditing = false }: { device: Device,
             .editing :global(.MuiSwitch-root) {
                 pointer-events: none;
             }
-            @keyframes blink {
-                0% { opacity: 0.5; }
-                50% { opacity: 1; }
-                100% { opacity: 0.5; }
-            }
-            .veil {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(128, 128, 128, 0.25);
-                animation: blink 1s linear infinite;
-                cursor: pointer;
-            }
             h3 {
                 font-weight: normal;
                 color: var(--primary-color);
@@ -126,6 +148,7 @@ export function DeviceView({ device, disableEditing = false }: { device: Device,
             <Divider sx={{ my: 1 }} />
 
             <OnOffView device={device} />
+            <OnView device={device} />
             {/* <ModesView device={device} /> */}
 
             {globalEditing && <div className="veil" onClick={() => setEditingThis(!editingThis)} />}
@@ -138,6 +161,9 @@ export function DeviceView({ device, disableEditing = false }: { device: Device,
 }
 
 export function MultiDeviceView({ devices, disableEditing = false }: { devices: Device[], disableEditing?: boolean }) {
+    const [creating, setCreating] = React.useState(false)
+    const globalEditing = useModes(x => x.editing) && !disableEditing
+
     return <div className="devices">
         <style jsx>{`
             .devices {
@@ -147,5 +173,15 @@ export function MultiDeviceView({ devices, disableEditing = false }: { devices: 
         `}</style>
         {devices.map(device =>
             <DeviceView key={device.id} {...{ device, disableEditing }} />)}
+
+        {globalEditing && <Box sx={{ my: 2, columnSpan: "all" }}>
+            <IconButton onClick={() => setCreating(true)}>
+                <Add />
+            </IconButton>
+        </Box>}
+
+        <Dialog open={creating} onClose={() => setCreating(false)}>
+            <DeviceForm onClose={() => setCreating(false)} />
+        </Dialog>
     </div>
 }
