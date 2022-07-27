@@ -24,7 +24,7 @@ function SlideyNavigation({ routes, current }: { routes: Route[], current: strin
     const shift = { transform: `translateX(${-100 * current_index}%)` }
 
     return <div className="nav-container">
-        <style>{`
+        <style jsx>{`
             .nav-container {
                 height: 100%;
                 overflow: hidden;
@@ -32,6 +32,8 @@ function SlideyNavigation({ routes, current }: { routes: Route[], current: strin
                 flex-direction: row;
             }
             .screen {
+                display: flex;
+                flex-direction: column;
                 flex-shrink: 0;
                 transition: transform 0.5s;
                 height: 100%;

@@ -114,3 +114,30 @@ body {
         display: flex;
     }
 }
+
+@keyframes blink {
+    0% {
+        opacity: 0.75;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.75;
+    }
+}
+
+.veil {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(128, 128, 128, 0.25);
+    border: 2px dashed black;
+    animation: blink 1s linear infinite;
+    cursor: pointer;
+}

@@ -3,11 +3,14 @@ import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitl
 import React, { FormEvent, useCallback, useMemo } from "react";
 import { Device, useDevices } from "../model/useDevices";
 import { Group, useGroups } from "../model/useGroups";
+import { useModes } from "../model/useModes";
 import { pick } from "../utils";
 import { AppToolbar } from "./AppToolbar";
 import { MultiDeviceView } from "./DeviceView";
 
 function GroupEditor({ devices, group }: { devices: Device[], group?: Group }) {
+    const [deleting, setDeleting] = React.useState(false)
+    const drop = useGroups(x => x.drop)
     return <>
         <style jsx global>{`
             .checkboxes {
@@ -32,19 +35,32 @@ function GroupEditor({ devices, group }: { devices: Device[], group?: Group }) {
             </Box>
         </DialogContent>
         <DialogActions>
+            {group && <Button type="button" color="warning" onClick={() => setDeleting(true)}>Löschen</Button>}
             <Button type="reset">Abbrechen</Button>
             <Button type="submit" variant="outlined">Speichern</Button>
         </DialogActions>
+
+
+        {group && <Dialog open={deleting} onClose={() => setDeleting(false)}>
+            <DialogTitle>Gruppe löschen</DialogTitle>
+            <DialogContent>
+                <Typography>Möchtest du die Gruppe "{group.name}" wirklich löschen?</Typography>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => setDeleting(false)}>Abbrechen</Button>
+                <Button color="warning" onClick={() => drop(group.id)}>Löschen</Button>
+            </DialogActions>
+        </Dialog>}
     </>
 }
 
 
 function GroupView({ devices, group }: { devices: Device[], group: Group }) {
-    const { save, drop } = useGroups(x => pick(x, 'save', 'drop'))
+    const { save } = useGroups(x => pick(x, 'save', 'drop'))
     const execute = useDevices(x => x.execute)
     const [open, setOpen] = React.useState(false)
-    const [editing, setEditing] = React.useState(false)
-    const [deleting, setDeleting] = React.useState(false)
+    const [editingThis, setEditingThis] = React.useState(false)
+    const globalEditing = useModes(x => x.editing)
 
     const devs = useMemo(
         () => group.devices
@@ -66,12 +82,13 @@ function GroupView({ devices, group }: { devices: Device[], group: Group }) {
         const data = new FormData(e.target as HTMLFormElement)
         const name = data.get("name") as string
         const devices = Array.from(data.getAll("devices")).map(x => +x)
-        if (await save({ id: group.id, name, devices })) setEditing(false)
+        if (await save({ id: group.id, name, devices })) setEditingThis(false)
     }, [group.id])
 
     return <div className="group">
         <style jsx global>{`
             .group {
+                position: relative;
                 background-color: white;
             }
             .group-header {
@@ -89,46 +106,30 @@ function GroupView({ devices, group }: { devices: Device[], group: Group }) {
 
         <div className="group-header" onClick={() => setOpen(x => !x)}>
             <Box className="row">
-                <GroupIcon />
-                <div className="group-name">{group.name}</div>
-                <IconButton color="primary" onClick={(e) => (e.stopPropagation(), setEditing(true))}>
-                    <Edit />
-                </IconButton>
-            </Box>
-
-            <Box className="row" sx={{ py: 1, fontSize: "1.2em" }}>
                 {open ? <ExpandLess /> : <ExpandMore />}
+                <div className="group-name">{group.name}</div>
 
                 <FormControlLabel onClick={e => e.stopPropagation()} control={
                     <Switch checked={anyOn} onChange={toggleAll} />
-                } label="Alle umschalten" />
-
-                <IconButton color="warning" onClick={() => setDeleting(true)}>
-                    <DeleteForever />
-                </IconButton>
+                } label="Alle" />
             </Box>
+            {/* 
+            <Box className="row" sx={{ py: 1, fontSize: "1.2em" }}>
+            </Box> */}
         </div>
 
         {open && <div className="group-body">
             <MultiDeviceView devices={devs} disableEditing />
         </div>}
 
-        <Dialog open={editing} onClose={() => setEditing(false)} fullWidth={true}>
-            <form onSubmit={editGroup} onReset={() => setEditing(false)}>
+        {globalEditing && <div className="veil" onClick={() => setEditingThis(true)} />}
+
+        <Dialog open={editingThis} onClose={() => setEditingThis(false)} fullWidth={true}>
+            <form onSubmit={editGroup} onReset={() => setEditingThis(false)}>
                 <GroupEditor devices={devices} group={group} />
             </form>
         </Dialog>
 
-        <Dialog open={deleting} onClose={() => setDeleting(false)}>
-            <DialogTitle>Gruppe löschen</DialogTitle>
-            <DialogContent>
-                <Typography>Möchtest du die Gruppe "{group.name}" wirklich löschen?</Typography>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => setDeleting(false)}>Abbrechen</Button>
-                <Button color="warning" onClick={() => drop(group.id)}>Löschen</Button>
-            </DialogActions>
-        </Dialog>
     </div>
 }
 
@@ -136,6 +137,7 @@ export function GroupsScreen() {
     const { groups, save } = useGroups()
     const { devices } = useDevices()
     const [creating, setCreating] = React.useState(false)
+    const editing = useModes(x => x.editing)
 
     const create = useCallback(async (e: FormEvent) => {
         e.preventDefault()
@@ -151,11 +153,11 @@ export function GroupsScreen() {
             <div id="groups">
                 {devices && groups?.map(group => <GroupView key={group.id} devices={devices} group={group} />)}
 
-                <Box sx={{ my: 2 }}>
+                {editing && <Box sx={{ my: 2 }}>
                     <IconButton onClick={() => setCreating(true)}>
                         <Add />
                     </IconButton>
-                </Box>
+                </Box>}
             </div>
         </div>
 
