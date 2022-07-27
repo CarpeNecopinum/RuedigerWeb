@@ -39,5 +39,34 @@ export const ActorForms = {
                 ])}
             />
         </>
+    },
+
+    Computer: ({ device }: { device?: Partial<Device> }) => {
+        const [actorData, setActorData] = React.useState(JSON.parse(device?.actor_data ?? "null") || {});
+        const setPart = (key: string, value: any) => {
+            const new_actor_data = { ...actorData, [key]: value }
+            if (!value) delete new_actor_data[key]
+            setActorData(new_actor_data)
+        }
+
+        const reuse_trait = device?.traits?.length === 1 && device?.traits[0].name === "On"
+
+        return <>
+            <TextField label="Host" name="host"
+                fullWidth sx={{ my: 2 }} required
+                value={actorData?.host}
+                onChange={e => setPart('host', e.target.value)} />
+            <TextField label="Mac-Adresse" name="mac"
+                fullWidth sx={{ my: 2 }} required
+                value={actorData?.mac}
+                onChange={e => setPart('mac', e.target.value)} />
+
+            <input type="hidden" name="actor_data" value={JSON.stringify(actorData)} />
+            <input type="hidden" name="traits" value={
+                reuse_trait ? JSON.stringify(device?.traits) : JSON.stringify([
+                    { name: "On", state: "" },
+                ])}
+            />
+        </>
     }
 }
